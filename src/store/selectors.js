@@ -1,0 +1,1 @@
+export const currentWeatherSelector = (state) => state.weather.currentWeather
