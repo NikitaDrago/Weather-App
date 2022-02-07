@@ -1,9 +1,9 @@
 import React, {useCallback, useEffect, useRef} from 'react';
 import './App.css';
 import {useAppDispatch, useAppSelector} from "./store/hooks";
-import {citySelector, currentWeatherSelector, locationSelector} from "./store/selectors";
+import {citySelector, currentWeatherSelector, ipSelector, locationSelector} from "./store/selectors";
 import {dayArray, monthArray} from "./constants";
-import {fetchCurrentWeather, setCity} from "./store/weatherSlice";
+import {fetchCurrentWeather, setCity, setIp} from "./store/weatherSlice";
 import WeatherCard from "./WeatherCard";
 import {getGeolocation, getIp} from "./utils";
 
@@ -12,6 +12,7 @@ const App = () => {
   const weather = useAppSelector(currentWeatherSelector)
   const location = useAppSelector(locationSelector)
   const city = useAppSelector(citySelector)
+  const ip = useAppSelector(ipSelector)
   const date: Date = weather && new Date(weather.time)
   const inputField = useRef(null)
 
@@ -25,10 +26,14 @@ const App = () => {
   useEffect(() => {
     getIp()
       .then(res => res.IPv4)
-      .then(ip => getGeolocation(ip)
-        .then(location => dispatch(setCity(location.region.name_ru)))
-      )
-  }, [])
+      .then(res => dispatch(setIp(res)))
+  }, [dispatch])
+
+  useEffect(() => {
+    ip && getGeolocation(ip)
+      .then(geolocation => dispatch(setCity(geolocation.region.name_ru)))
+  }, [dispatch, ip])
+
 
   useEffect(() => {
     city && dispatch(fetchCurrentWeather(city))
@@ -58,7 +63,7 @@ const App = () => {
       <div className="search">
         <input type="search" ref={inputField} onKeyPress={handleSearch}/>
         <img className="search__img" src="https://img.icons8.com/ios-glyphs/30/000000/search--v2.png"
-             onClick={handleSearch}/>
+             onClick={handleSearch} alt='search'/>
       </div>
     </div>
   );

@@ -4,7 +4,8 @@ export interface WeatherState {
   currentWeather: object | null | undefined,
   forecast: object | null | undefined,
   location: object | null | undefined,
-  city: string | undefined,
+  city: string | null | undefined,
+  ip: string | null | undefined
 }
 
 const initialState: WeatherState = {
@@ -12,6 +13,7 @@ const initialState: WeatherState = {
   forecast: null,
   location: null,
   city: '',
+  ip: null
 }
 
 export const fetchCurrentWeather = createAsyncThunk(
@@ -31,6 +33,9 @@ export const weatherSlice = createSlice({
     },
     setCity: (state, action) => {
       state.city = action.payload
+    },
+    setIp: (state, action) => {
+      state.ip = action.payload
     }
   },
   extraReducers: (builder => {
@@ -42,7 +47,7 @@ export const weatherSlice = createSlice({
   })
 })
 
-export const {setCurrentWeather, setCity} = weatherSlice.actions
+export const {setCurrentWeather, setCity, setIp} = weatherSlice.actions
 
 
 export default weatherSlice.reducer
