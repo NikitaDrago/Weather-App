@@ -12,7 +12,7 @@ const initialState: WeatherState = {
   currentWeather: null,
   forecast: null,
   location: null,
-  city: '',
+  city: 'Полоцк',
   ip: null
 }
 
